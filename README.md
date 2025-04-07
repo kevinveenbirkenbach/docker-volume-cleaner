@@ -6,6 +6,17 @@ Keep your Docker environment tidy, automated, and efficient 🚀
 
 ---
 
+## ⚙️ Features
+
+- Detects all anonymous Docker volumes (64-character hashes)
+- Skips whitelisted volumes
+- Skips bootstrap mounts (`/var/www/bootstrap`)
+- Cleans up symlinks **and** their target directories
+- Optional confirmation prompt via `--no-confirmation`
+- Pure Python — **no dependencies**
+
+---
+
 ## 📦 Installation
 
 Install it using [Kevin’s Package Manager](https://github.com/kevinveenbirkenbach/package-manager) with the alias:
@@ -19,14 +30,26 @@ pkgmgr install dockreap
 
 ---
 
-## ⚙️ Features
+## 🧪 How to Use
 
-- Detects all anonymous Docker volumes (64-character hashes)
-- Skips whitelisted volumes
-- Skips bootstrap mounts (`/var/www/bootstrap`)
-- Cleans up symlinks **and** their target directories
-- Optional confirmation prompt via `--no-confirmation`
-- Pure Python — **no dependencies**
+```bash
+# Basic usage with confirmation prompt
+dockreap
+
+# Skip confirmation
+dockreap --no-confirmation
+
+# Skip specific volumes by adding them to the whitelist
+dockreap "volumeid1 volumeid2"
+
+# Skip confirmation + whitelist
+dockreap "volumeid1 volumeid2" --no-confirmation
+```
+
+📝 Notes:
+- Only volumes with 64-character hash names (anonymous volumes) are considered.
+- Volumes mounted at `/var/www/bootstrap` are automatically excluded.
+- If a volume directory is a **symlink**, both the symlink and its target are removed.
 
 ---
 
