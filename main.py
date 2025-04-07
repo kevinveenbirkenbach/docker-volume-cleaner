@@ -45,18 +45,20 @@ def is_volume_used(volume):
     return bool(result.stdout.strip())
 
 def cleanup_symlink(volume):
-    volume_path = VOLUME_BASE_PATH / volume
-    if volume_path.is_symlink():
-        target_path = volume_path.resolve()
-        print(f"Volume directory {volume_path} is a symlink to {target_path}.")
+    volume_dir = VOLUME_BASE_PATH / volume
+    data_path = volume_dir / "_data"
+
+    if data_path.is_symlink():
+        target_path = data_path.resolve()
+        print(f"_data of volume {volume} is a symlink to {target_path}.")
         try:
-            print(f"Removing symlink: {volume_path}")
-            volume_path.unlink()
+            print(f"Removing symlink: {data_path}")
+            data_path.unlink()
             if target_path.exists():
                 print(f"Removing symlink target directory: {target_path}")
                 shutil.rmtree(target_path)
         except Exception as e:
-            print(f"Failed to clean up symlink or target for {volume}: {e}")
+            print(f"Failed to clean up _data symlink or its target for {volume}: {e}")
 
 def delete_volume(volume):
     cleanup_symlink(volume)
