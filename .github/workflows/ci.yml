@@ -1,0 +1,43 @@
+name: CI (unit tests, stable tag)
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["v*.*.*"]
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # needed to create/move tags reliably
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install package (editable)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+
+      - name: Run unit tests
+        run: make test
+
+      - name: Mark commit as stable (move stable tag)
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Move/create 'stable' tag to the same commit as the pushed SemVer tag
+          git tag -f stable "${GITHUB_SHA}"
+          git push -f origin stable
