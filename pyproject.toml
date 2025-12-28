@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dockreap"
-version = "0.0.0"
+version = "1.0.0"
 description = "Remove unused anonymous Docker volumes (with symlink cleanup)."
 readme = "README.md"
 requires-python = ">=3.9"
